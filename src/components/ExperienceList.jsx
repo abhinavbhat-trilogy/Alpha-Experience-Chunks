@@ -1,6 +1,13 @@
 import { ChevronRight, Plus } from 'lucide-react';
 import { colorMap } from '../data/initialData';
 
+const bucketColors = {
+  Marketing: 'bg-pink-100 text-pink-700',
+  Admissions: 'bg-violet-100 text-violet-700',
+  Roster: 'bg-teal-100 text-teal-700',
+  Academics: 'bg-sky-100 text-sky-700',
+};
+
 export function ExperienceList({
   userData,
   selectedStage,
@@ -44,7 +51,7 @@ export function ExperienceList({
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-xs text-gray-500">Experience {idx + 1}</span>
                     {stage.phase && (
                       <span className={`text-xs px-1.5 py-0.5 rounded ${
@@ -53,6 +60,11 @@ export function ExperienceList({
                           : 'bg-green-100 text-green-700'
                       }`}>
                         {stage.phase}
+                      </span>
+                    )}
+                    {stage.bucket && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${bucketColors[stage.bucket] || 'bg-gray-100 text-gray-500'}`}>
+                        {stage.bucket}
                       </span>
                     )}
                   </div>

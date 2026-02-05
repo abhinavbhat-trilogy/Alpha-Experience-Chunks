@@ -1,5 +1,13 @@
 import { useState } from 'react';
 import { Edit2 } from 'lucide-react';
+import { BUCKETS } from '../data/initialData';
+
+const bucketColors = {
+  Marketing: 'bg-pink-100 text-pink-700',
+  Admissions: 'bg-violet-100 text-violet-700',
+  Roster: 'bg-teal-100 text-teal-700',
+  Academics: 'bg-sky-100 text-sky-700',
+};
 
 export function ExperienceDetail({
   stage,
@@ -28,7 +36,7 @@ export function ExperienceDetail({
       </div>
 
       <div className="space-y-4">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           <div className="col-span-2">
             <label className="block text-xs font-medium text-gray-700 mb-1.5">Experience Name</label>
             {editMode ? (
@@ -63,6 +71,24 @@ export function ExperienceDetail({
                   : 'bg-gray-100 text-gray-500'
               }`}>
                 {stage.phase || 'No Phase'}
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">Bucket</label>
+            {editMode ? (
+              <select
+                value={stage.bucket}
+                onChange={(e) => onUpdateStage('bucket', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                {BUCKETS.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            ) : (
+              <div className={`inline-block px-2 py-1 text-sm rounded ${bucketColors[stage.bucket] || 'bg-gray-100 text-gray-500'}`}>
+                {stage.bucket}
               </div>
             )}
           </div>
