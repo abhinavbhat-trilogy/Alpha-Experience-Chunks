@@ -264,53 +264,6 @@ export const initialData = {
       }
     ]
   },
-  leadership: {
-    name: "School Leadership",
-    color: "rose",
-    type: "internal",
-    stages: [
-      {
-        id: "l1",
-        name: "Enrollment & Capacity Planning",
-        userIntent: "I want to understand enrollment trends and plan capacity",
-        currentState: "Pull data from multiple systems (SIS, HubSpot, spreadsheets). Manual aggregation across campuses. No real-time visibility.",
-        futureState: "Real-time enrollment dashboard across all campuses. Capacity planning tools. Projections based on pipeline data.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "l2",
-        name: "School Performance & Operations",
-        userIntent: "I want to monitor operational health across schools",
-        currentState: "Spreadsheets and disconnected reports. No unified view of operational metrics. Data often stale.",
-        futureState: "Unified operational dashboard. Enrollment trends, retention rates, financial metrics, staff utilization. Real-time KPIs.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "l3",
-        name: "Cross-Campus Reporting",
-        userIntent: "I want to compare performance across campuses",
-        currentState: "Manual aggregation of data from each campus. Time-consuming, error-prone. Cannot easily compare campuses.",
-        futureState: "Automated cross-campus reports. Compare performance, identify best practices. Drill down by campus, grade, or cohort.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "l4",
-        name: "Strategic Planning & Forecasting",
-        userIntent: "I want to make data-driven strategic decisions",
-        currentState: "Historical data difficult to access. Forecasting done in separate spreadsheets with manual inputs.",
-        futureState: "Historical trend analysis. Predictive models for enrollment, retention, revenue. Scenario planning tools.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "l5",
-        name: "Reporting & Analytics",
-        userIntent: "I want real-time, accurate reports across all schools without manual data gathering",
-        currentState: "80+ Google Sheets manually maintained. Data copied from SIS, often stale. Manual aggregation across campuses required.",
-        futureState: "Unified reporting layer. Real-time executive dashboards. Automated Google Sheets sync. Compliance reports with one click. Network-wide KPIs.",
-        owner: { product: "TBD", tech: "TBD" }
-      }
-    ]
-  },
   learningPlatforms: {
     name: "Learning Platforms & External Systems",
     color: "orange",
