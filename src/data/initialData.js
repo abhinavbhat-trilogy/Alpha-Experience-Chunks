@@ -9,17 +9,17 @@ export const initialData = {
         name: "Learn about Alpha",
         phase: "Pre-Application",
         userIntent: "I want to understand if Alpha is the right school for my child",
-        currentState: "Marketing website, word of mouth, events. No way to track interest or engagement. Parents must proactively reach out.",
-        futureState: "Marketing site with embedded lead capture. Track engagement (page views, downloads). Automated nurture campaigns based on interest signals.",
+        currentState: "Marketing website, word of mouth, events. Attribution and tracking difficult although systems are being built to tackle this as I understand it.",
+        futureState: "-",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
         id: "p2",
-        name: "Inquiry",
+        name: "Inquiry and Next Steps",
         phase: "Pre-Application",
         userIntent: "I want to express interest and learn next steps",
         currentState: "Fill out web form. Wait for admissions to call/email back. No visibility into inquiry status or next steps.",
-        futureState: "Inquiry form creates lead in system. Automated confirmation email with next steps. Parent can see inquiry status in portal.",
+        futureState: "-",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
@@ -27,7 +27,7 @@ export const initialData = {
         name: "Application (Deposit, Shadow Day, Forms)",
         phase: "Post-Application",
         userIntent: "I want to apply and get my child into Alpha",
-        currentState: "Fill out application via email/paper forms. Separate phone/email coordination for shadow day scheduling. Manual tracking of application status. No visibility into where they are in the process.",
+        currentState: "Fill out application via email and manual forms. Separate phone/email coordination for shadow day scheduling. Manual tracking of application status. No visibility into where they are in the process.",
         futureState: "Complete application in parent portal. Self-schedule shadow day from available slots. Track application status in real-time. Automated reminders for pending tasks. See timeline: application → shadow day → decision.",
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -54,7 +54,7 @@ export const initialData = {
         name: "Re-enrollment",
         phase: "Post-Application",
         userIntent: "I want to re-enroll my child for next year",
-        currentState: "Receive email notification. Fill out forms via email/paper. Manual tracking of completion. No visibility into what's required or status.",
+        currentState: "Receive email notification. Fill out forms via email. Manual tracking of completion. No visibility into what's required or status.",
         futureState: "Re-enrollment triggered in portal. See all required forms and deadlines. Complete forms online (pre-filled where possible). Track completion progress. Automated reminders for pending items.",
         owner: { product: "TBD", tech: "TBD" }
       }
@@ -70,15 +70,15 @@ export const initialData = {
         name: "Lead Management & Initial Contact",
         userIntent: "I want to convert inquiries into qualified applications",
         currentState: "HubSpot for lead capture. Manual follow-up emails. No unified view of inquiry status across systems.",
-        futureState: "Unified dashboard showing all leads/inquiries. Automated drip campaigns. Real-time lead scoring and prioritization.",
+        futureState: "-",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
         id: "a2",
-        name: "Application Review & Decision",
-        userIntent: "I want to review applications and make admission decisions efficiently",
-        currentState: "Jump between HubSpot, SIS, spreadsheets to review applications. Manual data entry in multiple systems.",
-        futureState: "Single operational cockpit. View all applications with complete context. Make decisions in one place, instantly reflected in parent portal.",
+        name: "Application Processing",
+        userIntent: "I want to guide families through the application process with as little friction as possible",
+        currentState: "Manual orchestration of the entire process - collecting documents via email, entering data into HubSpot/SIS, following up on missing items, coordinating with families across multiple channels.",
+        futureState: "Portal-driven workflow where families self-serve. Admissions monitors progress dashboards, receives alerts for stalled applications, and intervenes only when needed.",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
@@ -101,7 +101,7 @@ export const initialData = {
         id: "a5",
         name: "Enrollment Processing & Handoff",
         userIntent: "I want to seamlessly hand off enrolled students to registrars",
-        currentState: "Manual data entry into SIS after enrollment. Email registrar about new student. Paper form collection.",
+        currentState: "Manual data entry into SIS after enrollment. Email registrar about new student. Manual document collection via email.",
         futureState: "Automated handoff to registrar portal when enrollment complete. All data flows from parent portal to student record.",
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -124,7 +124,7 @@ export const initialData = {
         id: "r1",
         name: "New Student Enrollment Setup",
         userIntent: "I want to set up new students quickly and accurately",
-        currentState: "Receive manual notification from admissions. Create student record in legacy SIS. Manual data entry from paper forms.",
+        currentState: "Receive manual notification from admissions. Create student record in legacy SIS. Manual data entry from emailed documents.",
         futureState: "Automated notification when student enrolls. Pre-populated student record from application data. Review and finalize setup.",
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -140,7 +140,7 @@ export const initialData = {
         id: "r3",
         name: "Medical Records & Compliance",
         userIntent: "I want to ensure all students have up-to-date medical records",
-        currentState: "Paper forms + legacy SIS storage. No proactive alerts for missing/expired medical info. Hard to access in emergencies.",
+        currentState: "Email attachments + legacy SIS storage. No proactive alerts for missing/expired medical info. Hard to access in emergencies.",
         futureState: "Digital medical records with visual alerts. Automated reminders for updates. Easy access for authorized staff.",
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -154,10 +154,10 @@ export const initialData = {
       },
       {
         id: "r5",
-        name: "Grade Progression & Year-End Processing",
-        userIntent: "I want to transition students to the next year smoothly",
-        currentState: "Manual updates in legacy SIS. Promote students to next grade. Paper records archived.",
-        futureState: "Automated grade progression workflow. Complete historical records maintained. Alumni status tracking.",
+        name: "Attendance Management",
+        userIntent: "I want to access and manage attendance data without manual spreadsheet work",
+        currentState: "Receive attendance data from guides via spreadsheets. Consolidate and track in Google Sheets. No centralized view. Manual effort to generate attendance reports.",
+        futureState: "Real-time attendance dashboard auto-synced from guide mobile app. Attendance visible in student profiles. Easy compliance reporting. Parents see attendance in portal.",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
@@ -205,6 +205,22 @@ export const initialData = {
         userIntent: "I want to communicate effectively with parents",
         currentState: "Email/phone only. No record of communication history in one place.",
         futureState: "In-portal messaging with parents. Full communication history attached to student record.",
+        owner: { product: "TBD", tech: "TBD" }
+      },
+      {
+        id: "g5",
+        name: "Attendance Taking & Tracking",
+        userIntent: "I want to take attendance quickly and ensure it's recorded accurately",
+        currentState: "Take attendance via Android app. Export data to manual spreadsheet. Send to registrars via email. No visibility into attendance trends or history.",
+        futureState: "Mobile attendance app with real-time sync. Attendance automatically recorded in student profiles. View attendance history and trends for assigned students.",
+        owner: { product: "TBD", tech: "TBD" }
+      },
+      {
+        id: "g6",
+        name: "Shadow Day Feedback",
+        userIntent: "I want to provide feedback on shadow day students quickly after their visit",
+        currentState: "Send feedback via email which is then entered into HubSpot, or manually enter feedback into HubSpot directly.",
+        futureState: "Provide shadow day feedback directly from the guide portal. Feedback instantly available to admissions team.",
         owner: { product: "TBD", tech: "TBD" }
       }
     ]

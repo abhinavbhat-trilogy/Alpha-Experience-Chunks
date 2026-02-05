@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { Edit2, Trash2 } from 'lucide-react';
+import { Edit2 } from 'lucide-react';
 
 export function ExperienceDetail({
   stage,
-  onUpdateStage,
-  onUpdateOwner,
-  onDeleteStage
+  onUpdateStage
 }) {
   const [editMode, setEditMode] = useState(false);
 
@@ -21,20 +19,12 @@ export function ExperienceDetail({
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-gray-700">Experience Details</h2>
-        <div className="flex gap-2">
-          <button
+        <button
             onClick={() => setEditMode(!editMode)}
             className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
           >
             <Edit2 size={12} /> {editMode ? 'Done' : 'Edit'}
           </button>
-          <button
-            onClick={onDeleteStage}
-            className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
-          >
-            <Trash2 size={12} /> Delete
-          </button>
-        </div>
       </div>
 
       <div className="space-y-4">
@@ -94,7 +84,7 @@ export function ExperienceDetail({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">Current State (Maintenance)</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">Today's Lived Experience</label>
           {editMode ? (
             <textarea
               value={stage.currentState}
@@ -108,7 +98,7 @@ export function ExperienceDetail({
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">Future State</label>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">The Future 0-Friction Experience</label>
           {editMode ? (
             <textarea
               value={stage.futureState}
@@ -121,34 +111,6 @@ export function ExperienceDetail({
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Product Owner</label>
-            {editMode ? (
-              <input
-                type="text"
-                value={stage.owner.product}
-                onChange={(e) => onUpdateOwner('product', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            ) : (
-              <div className="px-3 py-2 text-sm bg-gray-100 rounded-lg">{stage.owner.product}</div>
-            )}
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">Tech Lead</label>
-            {editMode ? (
-              <input
-                type="text"
-                value={stage.owner.tech}
-                onChange={(e) => onUpdateOwner('tech', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            ) : (
-              <div className="px-3 py-2 text-sm bg-gray-100 rounded-lg">{stage.owner.tech}</div>
-            )}
-          </div>
-        </div>
       </div>
     </div>
   );

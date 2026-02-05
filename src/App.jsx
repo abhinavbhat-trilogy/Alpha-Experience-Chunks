@@ -106,27 +106,6 @@ export default function App() {
     setSelectedStage(prev => ({ ...prev, [field]: value }));
   }, [selectedUser, selectedStage]);
 
-  const updateOwner = useCallback((ownerType, value) => {
-    if (!selectedUser || !selectedStage) return;
-
-    setData(prev => ({
-      ...prev,
-      [selectedUser]: {
-        ...prev[selectedUser],
-        stages: prev[selectedUser].stages.map(stage =>
-          stage.id === selectedStage.id
-            ? { ...stage, owner: { ...stage.owner, [ownerType]: value } }
-            : stage
-        )
-      }
-    }));
-
-    setSelectedStage(prev => ({
-      ...prev,
-      owner: { ...prev.owner, [ownerType]: value }
-    }));
-  }, [selectedUser, selectedStage]);
-
   const addStage = () => {
     if (!selectedUser) return;
 
@@ -136,8 +115,7 @@ export default function App() {
       name: "New Experience",
       userIntent: "I want to...",
       currentState: "Description of current state...",
-      futureState: "Description of future state...",
-      owner: { product: "TBD", tech: "TBD" }
+      futureState: "Description of future state..."
     };
 
     setData(prev => ({
@@ -147,21 +125,17 @@ export default function App() {
         stages: [...prev[selectedUser].stages, newStage]
       }
     }));
-  };
 
-  const deleteStage = () => {
-    if (!selectedUser || !selectedStage) return;
+    // Auto-select the new stage
+    setSelectedStage(newStage);
 
-    if (window.confirm("Are you sure you want to delete this experience?")) {
-      setData(prev => ({
-        ...prev,
-        [selectedUser]: {
-          ...prev[selectedUser],
-          stages: prev[selectedUser].stages.filter(stage => stage.id !== selectedStage.id)
-        }
-      }));
-      setSelectedStage(null);
-    }
+    // Scroll to the new experience after a brief delay for render
+    setTimeout(() => {
+      const newElement = document.querySelector(`[data-stage-id="${newId}"]`);
+      if (newElement) {
+        newElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
   };
 
   const resetToDefault = async () => {
@@ -192,9 +166,8 @@ export default function App() {
           md += `**Phase**: ${stage.phase}\n\n`;
         }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
-        md += `**Current State (Maintenance)**:\n${stage.currentState}\n\n`;
-        md += `**Future State**:\n${stage.futureState}\n\n`;
-        md += `**Owner**:\n- Product: ${stage.owner.product}\n- Tech Lead: ${stage.owner.tech}\n\n`;
+        md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
+        md += `**The Future 0-Friction Experience**:\n${stage.futureState}\n\n`;
         md += '---\n\n';
       });
     });
@@ -210,9 +183,8 @@ export default function App() {
           md += `**Phase**: ${stage.phase}\n\n`;
         }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
-        md += `**Current State (Maintenance)**:\n${stage.currentState}\n\n`;
-        md += `**Future State**:\n${stage.futureState}\n\n`;
-        md += `**Owner**:\n- Product: ${stage.owner.product}\n- Tech Lead: ${stage.owner.tech}\n\n`;
+        md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
+        md += `**The Future 0-Friction Experience**:\n${stage.futureState}\n\n`;
         md += '---\n\n';
       });
     });
@@ -314,8 +286,6 @@ export default function App() {
             <ExperienceDetail
               stage={selectedStage}
               onUpdateStage={updateStage}
-              onUpdateOwner={updateOwner}
-              onDeleteStage={deleteStage}
             />
           </div>
         </div>

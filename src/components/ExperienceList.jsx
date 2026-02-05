@@ -36,6 +36,7 @@ export function ExperienceList({
           return (
             <button
               key={stage.id}
+              data-stage-id={stage.id}
               onClick={() => onSelectStage(stage)}
               className={`w-full text-left px-3 py-2.5 rounded-lg border transition-all text-sm ${
                 isSelected ? `${colors.bg} ${colors.border}` : `border-gray-200 ${colors.hover}`
