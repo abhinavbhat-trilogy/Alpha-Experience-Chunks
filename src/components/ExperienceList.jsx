@@ -43,7 +43,18 @@ export function ExperienceList({
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="text-xs text-gray-500">Experience {idx + 1}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">Experience {idx + 1}</span>
+                    {stage.phase && (
+                      <span className={`text-xs px-1.5 py-0.5 rounded ${
+                        stage.phase === 'Pre-Application'
+                          ? 'bg-amber-100 text-amber-700'
+                          : 'bg-green-100 text-green-700'
+                      }`}>
+                        {stage.phase}
+                      </span>
+                    )}
+                  </div>
                   <div className="font-medium mt-0.5">{stage.name}</div>
                   <div className="text-xs text-gray-600 mt-1 italic">{stage.userIntent}</div>
                 </div>

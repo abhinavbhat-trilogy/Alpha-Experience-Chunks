@@ -1,17 +1,83 @@
-import { useState } from 'react';
-import { Download, RotateCcw } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Download, RotateCcw, Cloud, CloudOff, Loader2 } from 'lucide-react';
 import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
 import { initialData } from './data/initialData';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import { fetchData, saveData, isConfigured } from './services/jsonbin';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
 
 export default function App() {
-  const [data, setData] = useLocalStorage(STORAGE_KEY, initialData);
+  const [data, setData] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedStage, setSelectedStage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [lastSaved, setLastSaved] = useState(null);
+
+  const useCloud = isConfigured();
+
+  // Load data on mount
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        if (useCloud) {
+          const cloudData = await fetchData();
+          if (cloudData) {
+            setData(cloudData);
+          } else {
+            setData(initialData);
+          }
+        } else {
+          // Fallback to localStorage
+          const stored = localStorage.getItem(STORAGE_KEY);
+          setData(stored ? JSON.parse(stored) : initialData);
+        }
+      } catch (err) {
+        setError('Failed to load data. Using local backup.');
+        const stored = localStorage.getItem(STORAGE_KEY);
+        setData(stored ? JSON.parse(stored) : initialData);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, [useCloud]);
+
+  // Save data when it changes (debounced)
+  useEffect(() => {
+    if (!data || loading) return;
+
+    // Always save to localStorage as backup
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+    if (!useCloud) {
+      setLastSaved(new Date());
+      return;
+    }
+
+    // Debounce cloud saves
+    const timeoutId = setTimeout(async () => {
+      setSaving(true);
+      try {
+        await saveData(data);
+        setLastSaved(new Date());
+        setError(null);
+      } catch (err) {
+        setError('Failed to save to cloud. Changes saved locally.');
+      } finally {
+        setSaving(false);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }, [data, useCloud, loading]);
 
   const handleSelectUser = (userId) => {
     setSelectedUser(userId);
@@ -22,7 +88,7 @@ export default function App() {
     setSelectedStage(stage);
   };
 
-  const updateStage = (field, value) => {
+  const updateStage = useCallback((field, value) => {
     if (!selectedUser || !selectedStage) return;
 
     setData(prev => ({
@@ -37,11 +103,10 @@ export default function App() {
       }
     }));
 
-    // Update selectedStage to reflect the change
     setSelectedStage(prev => ({ ...prev, [field]: value }));
-  };
+  }, [selectedUser, selectedStage]);
 
-  const updateOwner = (ownerType, value) => {
+  const updateOwner = useCallback((ownerType, value) => {
     if (!selectedUser || !selectedStage) return;
 
     setData(prev => ({
@@ -56,12 +121,11 @@ export default function App() {
       }
     }));
 
-    // Update selectedStage to reflect the change
     setSelectedStage(prev => ({
       ...prev,
       owner: { ...prev.owner, [ownerType]: value }
     }));
-  };
+  }, [selectedUser, selectedStage]);
 
   const addStage = () => {
     if (!selectedUser) return;
@@ -100,7 +164,7 @@ export default function App() {
     }
   };
 
-  const resetToDefault = () => {
+  const resetToDefault = async () => {
     if (window.confirm("This will reset all data to the original state. Any changes will be lost. Continue?")) {
       setData(initialData);
       setSelectedUser(null);
@@ -124,6 +188,9 @@ export default function App() {
       md += `### ${userData.name}\n\n`;
       userData.stages.forEach((stage, idx) => {
         md += `#### Experience ${idx + 1}: ${stage.name}\n\n`;
+        if (stage.phase) {
+          md += `**Phase**: ${stage.phase}\n\n`;
+        }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
         md += `**Current State (Maintenance)**:\n${stage.currentState}\n\n`;
         md += `**Future State**:\n${stage.futureState}\n\n`;
@@ -139,6 +206,9 @@ export default function App() {
       md += `### ${userData.name}\n\n`;
       userData.stages.forEach((stage, idx) => {
         md += `#### Experience ${idx + 1}: ${stage.name}\n\n`;
+        if (stage.phase) {
+          md += `**Phase**: ${stage.phase}\n\n`;
+        }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
         md += `**Current State (Maintenance)**:\n${stage.currentState}\n\n`;
         md += `**Future State**:\n${stage.futureState}\n\n`;
@@ -155,12 +225,48 @@ export default function App() {
     a.click();
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Loader2 className="animate-spin" size={20} />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Alpha Experience Chunks</h1>
-          <p className="text-gray-600 text-sm">Define ownership structure by user experiences</p>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">Alpha Experience Chunks</h1>
+            <div className="flex items-center gap-2 text-sm">
+              {useCloud ? (
+                <div className="flex items-center gap-1.5 text-green-600">
+                  {saving ? (
+                    <Loader2 className="animate-spin" size={14} />
+                  ) : (
+                    <Cloud size={14} />
+                  )}
+                  <span>{saving ? 'Saving...' : 'Cloud sync'}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 text-gray-500">
+                  <CloudOff size={14} />
+                  <span>Local only</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {error && (
+            <div className="mt-2 text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded">
+              {error}
+            </div>
+          )}
+
           <div className="flex gap-2 mt-3">
             <button
               onClick={exportData}
@@ -175,7 +281,12 @@ export default function App() {
               <RotateCcw size={16} /> Reset to Default
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">Changes are automatically saved to your browser</p>
+
+          {lastSaved && (
+            <p className="text-xs text-gray-500 mt-2">
+              Last saved: {lastSaved.toLocaleTimeString()}
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-12 gap-4">

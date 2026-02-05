@@ -38,18 +38,44 @@ export function ExperienceDetail({
       </div>
 
       <div className="space-y-4">
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">Experience Name</label>
-          {editMode ? (
-            <input
-              type="text"
-              value={stage.name}
-              onChange={(e) => onUpdateStage('name', e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          ) : (
-            <div className="text-lg font-semibold">{stage.name}</div>
-          )}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="col-span-2">
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">Experience Name</label>
+            {editMode ? (
+              <input
+                type="text"
+                value={stage.name}
+                onChange={(e) => onUpdateStage('name', e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            ) : (
+              <div className="text-lg font-semibold">{stage.name}</div>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1.5">Phase</label>
+            {editMode ? (
+              <select
+                value={stage.phase || ''}
+                onChange={(e) => onUpdateStage('phase', e.target.value || null)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">No Phase</option>
+                <option value="Pre-Application">Pre-Application</option>
+                <option value="Post-Application">Post-Application</option>
+              </select>
+            ) : (
+              <div className={`inline-block px-2 py-1 text-sm rounded ${
+                stage.phase === 'Pre-Application'
+                  ? 'bg-amber-100 text-amber-700'
+                  : stage.phase === 'Post-Application'
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-gray-100 text-gray-500'
+              }`}>
+                {stage.phase || 'No Phase'}
+              </div>
+            )}
+          </div>
         </div>
 
         <div>

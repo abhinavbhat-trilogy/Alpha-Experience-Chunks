@@ -7,6 +7,7 @@ export const initialData = {
       {
         id: "p1",
         name: "Learn about Alpha",
+        phase: "Pre-Application",
         userIntent: "I want to understand if Alpha is the right school for my child",
         currentState: "Marketing website, word of mouth, events. No way to track interest or engagement. Parents must proactively reach out.",
         futureState: "Marketing site with embedded lead capture. Track engagement (page views, downloads). Automated nurture campaigns based on interest signals.",
@@ -15,6 +16,7 @@ export const initialData = {
       {
         id: "p2",
         name: "Inquiry",
+        phase: "Pre-Application",
         userIntent: "I want to express interest and learn next steps",
         currentState: "Fill out web form. Wait for admissions to call/email back. No visibility into inquiry status or next steps.",
         futureState: "Inquiry form creates lead in system. Automated confirmation email with next steps. Parent can see inquiry status in portal.",
@@ -22,7 +24,8 @@ export const initialData = {
       },
       {
         id: "p3",
-        name: "Apply (Application + Shadow Day)",
+        name: "Application (Deposit, Shadow Day, Forms)",
+        phase: "Post-Application",
         userIntent: "I want to apply and get my child into Alpha",
         currentState: "Fill out application via email/paper forms. Separate phone/email coordination for shadow day scheduling. Manual tracking of application status. No visibility into where they are in the process.",
         futureState: "Complete application in parent portal. Self-schedule shadow day from available slots. Track application status in real-time. Automated reminders for pending tasks. See timeline: application → shadow day → decision.",
@@ -31,6 +34,7 @@ export const initialData = {
       {
         id: "p4",
         name: "Enroll & Pay",
+        phase: "Post-Application",
         userIntent: "I want to enroll my child and handle all enrollment requirements",
         currentState: "Receive offer via email. Separate payment links sent later. Sign tuition agreement via DocuSign. Manual tracking of deposit/payment status. Disconnected from application flow.",
         futureState: "See offer in parent portal immediately. Sign tuition agreement in portal (DocuSign integration). Pay deposit/tuition in portal. Real-time status updates. Automated transition to enrolled status.",
@@ -39,6 +43,7 @@ export const initialData = {
       {
         id: "p5",
         name: "Enrolled Student Experience",
+        phase: "Post-Application",
         userIntent: "I want to stay informed and manage my enrolled child's school life",
         currentState: "No parent-facing view of enrolled student. Must call registrar for grades, schedules, guide info, medical updates. No way to update emergency contacts or submit forms online.",
         futureState: "View child's profile in portal: grades, guide, schedule, medical info, emergency contacts. Update information as needed. Submit forms online. Communicate with guide. View announcements and calendar.",
@@ -47,6 +52,7 @@ export const initialData = {
       {
         id: "p6",
         name: "Re-enrollment",
+        phase: "Post-Application",
         userIntent: "I want to re-enroll my child for next year",
         currentState: "Receive email notification. Fill out forms via email/paper. Manual tracking of completion. No visibility into what's required or status.",
         futureState: "Re-enrollment triggered in portal. See all required forms and deadlines. Complete forms online (pre-filled where possible). Track completion progress. Automated reminders for pending items.",
