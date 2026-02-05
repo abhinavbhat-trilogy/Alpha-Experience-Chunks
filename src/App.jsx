@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Download, RotateCcw, Cloud, CloudOff, Loader2 } from 'lucide-react';
+import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban } from 'lucide-react';
 import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
-import { initialData } from './data/initialData';
+import { BucketView } from './components/BucketView';
+import { initialData, BUCKETS } from './data/initialData';
 import { fetchData, saveData, isConfigured } from './services/jsonbin';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
@@ -16,6 +17,7 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [lastSaved, setLastSaved] = useState(null);
+  const [viewMode, setViewMode] = useState('users');
 
   const useCloud = isConfigured();
 
@@ -113,6 +115,7 @@ export default function App() {
     const newStage = {
       id: newId,
       name: "New Experience",
+      bucket: BUCKETS[0],
       userIntent: "I want to...",
       currentState: "Description of current state...",
       futureState: "Description of future state..."
@@ -165,6 +168,9 @@ export default function App() {
         if (stage.phase) {
           md += `**Phase**: ${stage.phase}\n\n`;
         }
+        if (stage.bucket) {
+          md += `**Bucket**: ${stage.bucket}\n\n`;
+        }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
         md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
         md += `**The Future 0-Friction Experience**:\n${stage.futureState}\n\n`;
@@ -181,6 +187,9 @@ export default function App() {
         md += `#### Experience ${idx + 1}: ${stage.name}\n\n`;
         if (stage.phase) {
           md += `**Phase**: ${stage.phase}\n\n`;
+        }
+        if (stage.bucket) {
+          md += `**Bucket**: ${stage.bucket}\n\n`;
         }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
         md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
@@ -259,36 +268,63 @@ export default function App() {
               Last saved: {lastSaved.toLocaleTimeString()}
             </p>
           )}
-        </div>
 
-        <div className="grid grid-cols-12 gap-4">
-          {/* Left Sidebar */}
-          <div className="col-span-3">
-            <UserList
-              data={data}
-              selectedUser={selectedUser}
-              onSelectUser={handleSelectUser}
-            />
-          </div>
-
-          {/* Middle - Experiences List */}
-          <div className="col-span-4">
-            <ExperienceList
-              userData={selectedUser ? data[selectedUser] : null}
-              selectedStage={selectedStage}
-              onSelectStage={handleSelectStage}
-              onAddStage={addStage}
-            />
-          </div>
-
-          {/* Right - Details */}
-          <div className="col-span-5">
-            <ExperienceDetail
-              stage={selectedStage}
-              onUpdateStage={updateStage}
-            />
+          <div className="flex gap-1 mt-4 bg-gray-100 p-1 rounded-lg w-fit">
+            <button
+              onClick={() => setViewMode('users')}
+              className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 transition-all ${
+                viewMode === 'users'
+                  ? 'bg-white text-gray-900 shadow-sm font-medium'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Users size={14} /> By User
+            </button>
+            <button
+              onClick={() => setViewMode('buckets')}
+              className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 transition-all ${
+                viewMode === 'buckets'
+                  ? 'bg-white text-gray-900 shadow-sm font-medium'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <FolderKanban size={14} /> By Bucket
+            </button>
           </div>
         </div>
+
+        {viewMode === 'users' ? (
+          <div className="grid grid-cols-12 gap-4">
+            {/* Left Sidebar */}
+            <div className="col-span-3">
+              <UserList
+                data={data}
+                selectedUser={selectedUser}
+                onSelectUser={handleSelectUser}
+              />
+            </div>
+
+            {/* Middle - Experiences List */}
+            <div className="col-span-4">
+              <ExperienceList
+                userData={selectedUser ? data[selectedUser] : null}
+                selectedStage={selectedStage}
+                onSelectStage={handleSelectStage}
+                onAddStage={addStage}
+              />
+            </div>
+
+            {/* Right - Details */}
+            <div className="col-span-5">
+              <ExperienceDetail
+                stage={selectedStage}
+                onUpdateStage={updateStage}
+              />
+            </div>
+          </div>
+        ) : (
+          <BucketView data={data} />
+        )}
       </div>
     </div>
   );
