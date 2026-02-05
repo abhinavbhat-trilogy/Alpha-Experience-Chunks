@@ -98,14 +98,6 @@ export const initialData = {
         owner: { product: "TBD", tech: "TBD" }
       },
       {
-        id: "a5",
-        name: "Enrollment Processing & Handoff",
-        userIntent: "I want to seamlessly hand off enrolled students to registrars",
-        currentState: "Manual data entry into SIS after enrollment. Email registrar about new student. Manual document collection via email.",
-        futureState: "Automated handoff to registrar portal when enrollment complete. All data flows from parent portal to student record.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
         id: "a6",
         name: "Reporting & Analytics",
         userIntent: "I want to see pipeline metrics and conversion rates without manual tracking",
@@ -176,14 +168,6 @@ export const initialData = {
     type: "internal",
     stages: [
       {
-        id: "g1",
-        name: "Student Assignment & Roster",
-        userIntent: "I want to know which students I'm responsible for",
-        currentState: "Guides get student assignments via email or Slack. No centralized view of their roster.",
-        futureState: "Guide portal shows all assigned students. Real-time updates when students enroll or withdraw.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
         id: "g2",
         name: "Student Profile Access",
         userIntent: "I want to understand my students' backgrounds and needs",
@@ -197,14 +181,6 @@ export const initialData = {
         userIntent: "I want to track and document student progress",
         currentState: "Track student progress in personal spreadsheets or notebooks. No centralized system.",
         futureState: "Log student progress notes in guide portal. Track goals, interventions, and milestones. Share with parents/admissions as needed.",
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "g4",
-        name: "Communication with Parents",
-        userIntent: "I want to communicate effectively with parents",
-        currentState: "Email/phone only. No record of communication history in one place.",
-        futureState: "In-portal messaging with parents. Full communication history attached to student record.",
         owner: { product: "TBD", tech: "TBD" }
       },
       {
