@@ -54,9 +54,9 @@ export const initialData = {
         bucket: "Admissions",
         userIntent: "I want to apply, get accepted, and complete everything needed to enroll my child at Alpha",
         evolution: {
-          "Today": { description: "Steps: 1) Apply via HubSpot Forms with no status tracking. 2) Book shadow day via phone/email coordination. 3) Receive offer via email, accept by replying. 4) Pay deposit via separate payment links, set up billing manually. 5) Submit child data (medical, emergency contacts) via email/paper with no visibility into what's missing. 6) Sign legal agreements via DocuSign sent separately. Each step is disconnected, manual, and hard to track.", systems: ["HubSpot"] },
-          "26/27": { description: "-", systems: ["FinalSite"] },
-          "End State": { description: "Steps: 1) Apply in parent portal with real-time status tracking. 2) Self-schedule shadow day from available slots. 3) View and accept offer in portal with one click. 4) Pay deposit and set up billing in portal. 5) Complete all required forms in portal with checklist and reminders. 6) Sign all agreements electronically in portal. Entire flow is unified, trackable, and automated.", systems: ["Unified Student Platform"] }
+          "Today": { description: "Steps:\n1) Apply via HubSpot Forms with no status tracking.\n2) Book shadow day via phone/email coordination.\n3) Receive offer via email, accept by replying.\n4) Pay deposit via separate payment links, which sets up billing.\n5) Submit child data (medical, emergency contacts) SIS forms\n6) Sign legal agreements as SIS Forms.", systems: ["HubSpot", "Legacy SIS"] },
+          "26/27": { description: "Steps:\n1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Sign contract, pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist.\n6) Sign all agreements electronically in portal.", systems: ["FinalSite"] },
+          "End State": { description: "Steps:\n1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist and reminders.\n6) Sign all agreements electronically in portal. Entire flow is unified, trackable, and automated.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -67,8 +67,8 @@ export const initialData = {
         bucket: "Roster",
         userIntent: "I want to stay informed and manage my enrolled child's school life",
         evolution: {
-          "Today": { description: "No parent-facing view of enrolled student. Must call registrar for grades, schedules, guide info, medical updates. No way to update emergency contacts or submit forms online.", systems: ["Legacy SIS"] },
-          "26/27": { description: "-", systems: ["Unified Student Platform"] },
+          "Today": { description: "Hard to use parent-facing view of enrolled student. Must email registrar for grades, schedules, guide info, medical updates. No way to update emergency contacts or submit forms online other than the ones requested by guides.", systems: ["Legacy SIS"] },
+          "26/27": { description: "View child's profile in portal: grades, guide, schedule, medical info, emergency contacts. Update information as needed. Submit forms online. Communicate with guide. View announcements and calendar.", systems: ["Unified Student Platform"] },
           "End State": { description: "View child's profile in portal: grades, guide, schedule, medical info, emergency contacts. Update information as needed. Submit forms online. Communicate with guide. View announcements and calendar.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
@@ -80,9 +80,9 @@ export const initialData = {
         bucket: "Admissions",
         userIntent: "I want to re-enroll my child for next year and complete all required steps",
         evolution: {
-          "Today": { description: "Steps: 1) Receive re-enrollment offer via email, accept by replying. 2) Pay deposit via separate payment links, no connection to re-enrollment flow. 3) Update child data via emailed forms with no tracking. 4) Sign new tuition agreement via DocuSign sent separately. Each step is manual and disconnected.", systems: ["FinalSite"] },
-          "26/27": { description: "-", systems: ["FinalSite"] },
-          "End State": { description: "Steps: 1) View and accept re-enrollment offer in portal. 2) Pay deposit and set up next year's billing in portal. 3) Update forms pre-filled from last year with checklist and reminders. 4) Sign all updated agreements electronically in portal. Entire flow is unified and trackable.", systems: ["Unified Student Platform"] }
+          "Today": { description: "Steps:\n1) View and accept re-enrollment offer in portal.\n2) Pay deposit and set up next year's billing in portal.\n3) Update forms pre-filled from last year with checklist and reminders.\n4) Sign all updated agreements electronically in portal. Entire flow is unified and trackable.", systems: ["FinalSite"] },
+          "26/27": { description: "Steps:\n1) View and accept re-enrollment offer in portal.\n2) Pay deposit and set up next year's billing in portal.\n3) Update forms pre-filled from last year with checklist and reminders.\n4) Sign all updated agreements electronically in portal. Entire flow is unified and trackable.", systems: ["FinalSite"] },
+          "End State": { description: "Steps:\n1) View and accept re-enrollment offer in portal.\n2) Pay deposit and set up next year's billing in portal.\n3) Update forms pre-filled from last year with checklist and reminders.\n4) Sign all updated agreements electronically in portal. Entire flow is unified and trackable.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       }
