@@ -15,7 +15,7 @@ export const initialData = {
         bucket: "Marketing",
         userIntent: "I want to understand if Alpha is the right school for my child",
         evolution: {
-          "Today": { description: "Marketing website, word of mouth, events. Attribution and tracking difficult although systems are being built to tackle this as I understand it.", systems: ["HubSpot"] },
+          "Today": { description: "Marketing website, word of mouth, events, social media, community website.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
         },
@@ -28,7 +28,7 @@ export const initialData = {
         bucket: "Marketing",
         userIntent: "I want to attend events to learn more about Alpha and see if it's the right fit",
         evolution: {
-          "Today": { description: "Hear about events through word of mouth, social media, or email. Sign up via various links. No centralized event calendar or registration experience.", systems: ["HubSpot"] },
+          "Today": { description: "Hear about events and sign up via website events calendar, word of mouth, social media, email. Soon also via community site, and through the MacKenzie voice bot.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
         },
@@ -41,7 +41,7 @@ export const initialData = {
         bucket: "Marketing",
         userIntent: "I want to express interest and learn next steps",
         evolution: {
-          "Today": { description: "Fill out web form. Wait for admissions to call/email back. No visibility into inquiry status or next steps.", systems: ["HubSpot"] },
+          "Today": { description: "Fill out web form. Wait for admissions to call/email back. Parent receives a confirmation via email. Expansion team follows-up. Option to schedule a call. But no visibility into inquiry status.\n\nAdmissions process on website, soon on the communities site, and via MacKenzie voice bot.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
         },
@@ -54,9 +54,9 @@ export const initialData = {
         bucket: "Admissions",
         userIntent: "I want to apply, get accepted, and complete everything needed to enroll my child at Alpha",
         evolution: {
-          "Today": { description: "Steps:\n1) Apply via HubSpot Forms with no status tracking.\n2) Book shadow day via phone/email coordination.\n3) Receive offer via email, accept by replying.\n4) Pay deposit via separate payment links, which sets up billing.\n5) Submit child data (medical, emergency contacts) SIS forms\n6) Sign legal agreements as SIS Forms.", systems: ["HubSpot", "Legacy SIS"] },
-          "26/27": { description: "Steps:\n1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Sign contract, pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist.\n6) Sign all agreements electronically in portal.", systems: ["FinalSite"] },
-          "End State": { description: "Steps:\n1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist and reminders.\n6) Sign all agreements electronically in portal. Entire flow is unified, trackable, and automated.", systems: ["Unified Student Platform"] }
+          "Today": { description: "1) Apply via HubSpot Forms with no status tracking.\n2) Book shadow day via phone/email coordination.\n- A call from admissions after an application is a part of the process.\n3) Receive offer via email, accept by paying the deposit (and optionally replying, but the registrar will follow-up after deposit is paid)\n4) Pay deposit via a payment link (in offer email), which sets up billing.\n5) Submit child data (medical, emergency contacts) SIS forms.\n6) Sign legal agreements as SIS Forms.", systems: ["HubSpot", "Legacy SIS"] },
+          "26/27": { description: "1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Sign contract, pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist.\n6) Sign all agreements electronically in portal.\nUnexciting experience. Doesn't advise / sell. No AI agent to answer questions about the application process. No information re next steps and the first day of school.", systems: ["FinalSite"] },
+          "End State": { description: "1) Apply in parent portal with real-time status tracking.\n2) Self-schedule shadow day from available slots.\n3) View and accept offer in portal with one click.\n4) Pay deposit and set up billing in portal.\n5) Complete all required forms in portal with checklist and reminders.\n6) Sign all agreements electronically in portal. Entire flow is unified, trackable, and automated.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -67,7 +67,7 @@ export const initialData = {
         bucket: "Roster",
         userIntent: "I want to stay informed and manage my enrolled child's school life",
         evolution: {
-          "Today": { description: "Hard to use parent-facing view of enrolled student. Must email registrar for grades, schedules, guide info, medical updates. No way to update emergency contacts or submit forms online other than the ones requested by guides.", systems: ["Legacy SIS"] },
+          "Today": { description: "Hard to use parent-facing view of enrolled student. Parent Portal exists, but it's very low quality. No agent to answer day-to-day question and assist with parent needs. Must email registrar for grades, schedules, guide info, or to update medical info, emergency contacts. Parent communications are done in yet another system - ParentSquare. Afterschool programs are yet in another system.", systems: ["Legacy SIS"] },
           "26/27": { description: "View child's profile in portal: grades, guide, schedule, medical info, emergency contacts. Update information as needed. Submit forms online. Communicate with guide. View announcements and calendar.", systems: ["Unified Student Platform"] },
           "End State": { description: "View child's profile in portal: grades, guide, schedule, medical info, emergency contacts. Update information as needed. Submit forms online. Communicate with guide. View announcements and calendar.", systems: ["Unified Student Platform"] }
         },
@@ -99,7 +99,7 @@ export const initialData = {
         bucket: "Marketing",
         userIntent: "I want to organize events that help prospective families learn about Alpha and drive enrollment interest",
         evolution: {
-          "Today": { description: "Events organized manually. Promotion through email, social media, word of mouth. Registration via various tools. No centralized tracking of event attendance or conversion to inquiries.", systems: ["HubSpot"] },
+          "Today": { description: "Events managed via HubSpot. Standard events have landing pages and registration forms automatically created and published on the website. Promotion through website, email, social media, word of mouth. Attendance, lead source, and conversion tracking via HubSpot and the QuickSight dashboard.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
         },
@@ -111,7 +111,7 @@ export const initialData = {
         bucket: "After School",
         userIntent: "I want to run camps, tournaments, and other student-facing events that build brand awareness and attract prospective families",
         evolution: {
-          "Today": { description: "Events set up manually. Separate registration processes. No connection between event attendance and admissions pipeline. Hard to track which event participants later apply.", systems: ["AfterSchool HQ"] },
+          "Today": { description: "Camps set up in a dedicated system - afterschoolhq.com. Separate registration processes. No connection between event attendance and admissions pipeline. Currently hard to track which event participants later apply, but will be added to the Dashboard in February.", systems: ["AfterSchool HQ"] },
           "26/27": { description: "-", systems: ["AfterSchool HQ"] },
           "End State": { description: "-", systems: ["AfterSchool HQ"] }
         },
@@ -123,7 +123,7 @@ export const initialData = {
         bucket: "Marketing",
         userIntent: "I want to convert inquiries into qualified applications",
         evolution: {
-          "Today": { description: "HubSpot for lead capture. Manual follow-up emails. No unified view of inquiry status across systems.", systems: ["HubSpot"] },
+          "Today": { description: "HubSpot for lead capture. Follow-up sequences. Leads and conversion showing in QS Dashboard.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
         },
@@ -135,9 +135,9 @@ export const initialData = {
         bucket: "Admissions",
         userIntent: "I want to guide families through the application process with as little friction as possible",
         evolution: {
-          "Today": { description: "Manual orchestration of the entire process - collecting documents via email, entering data into HubSpot/SIS, following up on missing items, coordinating with families across multiple channels.", systems: ["HubSpot", "Legacy SIS"] },
-          "26/27": { description: "-", systems: ["FinalSite"] },
-          "End State": { description: "Portal-driven workflow where families self-serve. Admissions monitors progress dashboards, receives alerts for stalled applications, and intervenes only when needed.", systems: ["Unified Student Platform"] }
+          "Today": { description: "Manual shadow day coordination. Manual follow-up on missing items with parents. Manual parent assistance via email and calls. Mistakes updating records and perception of complexity with HubSpot.", systems: ["HubSpot", "Legacy SIS"] },
+          "26/27": { description: "End-to-end self-serve workflow for parents. No AI agents. Admissions still has to provide manual assistance. Several steps are still manual for admissions (e.g. contract generation, form validation).", systems: ["FinalSite"] },
+          "End State": { description: "Portal-driven workflow where families self-serve. Admissions monitors progress dashboards, receives alerts for stalled applications, and intervenes only when needed. AI agents monitor, remind, and provide assistance.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       },
