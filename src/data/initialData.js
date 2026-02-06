@@ -85,6 +85,18 @@ export const initialData = {
           "End State": { description: "Steps:\n1) View and accept re-enrollment offer in portal.\n2) Pay deposit and set up next year's billing in portal.\n3) Update forms pre-filled from last year with checklist and reminders.\n4) Sign all updated agreements electronically in portal. Entire flow is unified and trackable.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
+      },
+      {
+        id: "p7",
+        name: "After School Programs",
+        bucket: "After School",
+        userIntent: "I want to discover, sign up for, and manage my child's after school activities (camps, tournaments, clubs)",
+        evolution: {
+          "Today": { description: "After school programs managed in a separate system (afterschoolhq.com). Separate registration and payment from the main school experience. No connection to student profile or school communications.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
+        },
+        owner: { product: "TBD", tech: "TBD" }
       }
     ]
   },
@@ -102,18 +114,6 @@ export const initialData = {
           "Today": { description: "Events managed via HubSpot. Standard events have landing pages and registration forms automatically created and published on the website. Promotion through website, email, social media, word of mouth. Attendance, lead source, and conversion tracking via HubSpot and the QuickSight dashboard.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: [] },
           "End State": { description: "-", systems: [] }
-        },
-        owner: { product: "TBD", tech: "TBD" }
-      },
-      {
-        id: "a0b",
-        name: "Student-Facing Events (Camps & Tournaments)",
-        bucket: "After School",
-        userIntent: "I want to run camps, tournaments, and other student-facing events that build brand awareness and attract prospective families",
-        evolution: {
-          "Today": { description: "Camps set up in a dedicated system - afterschoolhq.com. Separate registration processes. No connection between event attendance and admissions pipeline. Currently hard to track which event participants later apply, but will be added to the Dashboard in February.", systems: ["AfterSchool HQ"] },
-          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
-          "End State": { description: "-", systems: ["AfterSchool HQ"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       },
