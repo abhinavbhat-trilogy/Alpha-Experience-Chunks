@@ -4,7 +4,7 @@ import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
 import { BucketView } from './components/BucketView';
-import { initialData, BUCKETS } from './data/initialData';
+import { initialData, BUCKETS, LEVELS } from './data/initialData';
 import { fetchData, saveData, isConfigured } from './services/jsonbin';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
@@ -117,8 +117,9 @@ export default function App() {
       name: "New Experience",
       bucket: BUCKETS[0],
       userIntent: "I want to...",
-      currentState: "Description of current state...",
-      futureState: "Description of future state..."
+      evolution: Object.fromEntries(
+        LEVELS.map(level => [level, { description: "-", systems: [] }])
+      )
     };
 
     setData(prev => ({
@@ -158,11 +159,7 @@ export default function App() {
     md += 'Generated: ' + new Date().toLocaleString() + '\n\n';
     md += '---\n\n';
 
-    // Internal Users
-    md += '## Internal Users\n\n';
-    internalUsers.forEach(userId => {
-      const userData = data[userId];
-      md += `### ${userData.name}\n\n`;
+    const exportStages = (userData) => {
       userData.stages.forEach((stage, idx) => {
         md += `#### Experience ${idx + 1}: ${stage.name}\n\n`;
         if (stage.phase) {
@@ -172,10 +169,27 @@ export default function App() {
           md += `**Bucket**: ${stage.bucket}\n\n`;
         }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
-        md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
-        md += `**The Future 0-Friction Experience**:\n${stage.futureState}\n\n`;
+        if (stage.evolution) {
+          LEVELS.forEach(level => {
+            const levelData = stage.evolution[level];
+            if (levelData) {
+              const systemsStr = levelData.systems && levelData.systems.length > 0
+                ? ` [${levelData.systems.join(', ')}]`
+                : '';
+              md += `**${level}**${systemsStr}:\n${levelData.description}\n\n`;
+            }
+          });
+        }
         md += '---\n\n';
       });
+    };
+
+    // Internal Users
+    md += '## Internal Users\n\n';
+    internalUsers.forEach(userId => {
+      const userData = data[userId];
+      md += `### ${userData.name}\n\n`;
+      exportStages(userData);
     });
 
     // External Systems
@@ -183,19 +197,7 @@ export default function App() {
     externalSystems.forEach(userId => {
       const userData = data[userId];
       md += `### ${userData.name}\n\n`;
-      userData.stages.forEach((stage, idx) => {
-        md += `#### Experience ${idx + 1}: ${stage.name}\n\n`;
-        if (stage.phase) {
-          md += `**Phase**: ${stage.phase}\n\n`;
-        }
-        if (stage.bucket) {
-          md += `**Bucket**: ${stage.bucket}\n\n`;
-        }
-        md += `**User Intent**: ${stage.userIntent}\n\n`;
-        md += `**Today's Lived Experience**:\n${stage.currentState}\n\n`;
-        md += `**The Future 0-Friction Experience**:\n${stage.futureState}\n\n`;
-        md += '---\n\n';
-      });
+      exportStages(userData);
     });
 
     const blob = new Blob([md], { type: 'text/markdown' });

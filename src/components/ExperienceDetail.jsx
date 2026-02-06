@@ -1,12 +1,25 @@
 import { useState } from 'react';
 import { Edit2 } from 'lucide-react';
-import { BUCKETS } from '../data/initialData';
+import { BUCKETS, LEVELS, SYSTEMS } from '../data/initialData';
 
 const bucketColors = {
   Marketing: 'bg-pink-100 text-pink-700',
   Admissions: 'bg-violet-100 text-violet-700',
   Roster: 'bg-teal-100 text-teal-700',
   Academics: 'bg-sky-100 text-sky-700',
+};
+
+const levelColors = {
+  'Today': { bg: 'bg-gray-50', border: 'border-gray-200', accent: 'border-l-gray-400', label: 'text-gray-700' },
+  '26/27': { bg: 'bg-amber-50', border: 'border-amber-200', accent: 'border-l-amber-400', label: 'text-amber-700' },
+  'End State': { bg: 'bg-blue-50', border: 'border-blue-200', accent: 'border-l-blue-400', label: 'text-blue-700' },
+};
+
+const systemColors = {
+  'HubSpot': 'bg-orange-100 text-orange-700 border-orange-200',
+  'Legacy SIS': 'bg-red-100 text-red-700 border-red-200',
+  'FinalSite': 'bg-cyan-100 text-cyan-700 border-cyan-200',
+  'Unified Student Platform': 'bg-emerald-100 text-emerald-700 border-emerald-200',
 };
 
 export function ExperienceDetail({
@@ -22,6 +35,29 @@ export function ExperienceDetail({
       </div>
     );
   }
+
+  const evolution = stage.evolution || {};
+
+  const toggleSystem = (level, system) => {
+    const levelData = evolution[level] || { description: '-', systems: [] };
+    const systems = levelData.systems || [];
+    const updatedSystems = systems.includes(system)
+      ? systems.filter(s => s !== system)
+      : [...systems, system];
+
+    onUpdateStage('evolution', {
+      ...evolution,
+      [level]: { ...levelData, systems: updatedSystems }
+    });
+  };
+
+  const updateDescription = (level, description) => {
+    const levelData = evolution[level] || { description: '-', systems: [] };
+    onUpdateStage('evolution', {
+      ...evolution,
+      [level]: { ...levelData, description }
+    });
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -109,34 +145,60 @@ export function ExperienceDetail({
           )}
         </div>
 
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">Today's Lived Experience</label>
-          {editMode ? (
-            <textarea
-              value={stage.currentState}
-              onChange={(e) => onUpdateStage('currentState', e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          ) : (
-            <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{stage.currentState}</div>
-          )}
-        </div>
+        {LEVELS.map(level => {
+          const levelData = evolution[level] || { description: '-', systems: [] };
+          const colors = levelColors[level] || levelColors['Today'];
+          const activeSystems = levelData.systems || [];
 
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">The Future 0-Friction Experience</label>
-          {editMode ? (
-            <textarea
-              value={stage.futureState}
-              onChange={(e) => onUpdateStage('futureState', e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          ) : (
-            <div className="text-sm text-gray-700 bg-blue-50 p-3 rounded-lg">{stage.futureState}</div>
-          )}
-        </div>
-
+          return (
+            <div key={level} className={`rounded-lg border ${colors.border} border-l-4 ${colors.accent} overflow-hidden`}>
+              <div className={`px-3 py-2 ${colors.bg} flex items-center justify-between`}>
+                <span className={`text-sm font-bold ${colors.label}`}>{level}</span>
+                <div className="flex gap-1 flex-wrap">
+                  {editMode ? (
+                    SYSTEMS.map(system => {
+                      const isActive = activeSystems.includes(system);
+                      return (
+                        <button
+                          key={system}
+                          onClick={() => toggleSystem(level, system)}
+                          className={`text-xs px-1.5 py-0.5 rounded border transition-all ${
+                            isActive
+                              ? systemColors[system]
+                              : 'bg-white text-gray-400 border-gray-200 opacity-50 hover:opacity-100'
+                          }`}
+                        >
+                          {system}
+                        </button>
+                      );
+                    })
+                  ) : (
+                    activeSystems.map(system => (
+                      <span
+                        key={system}
+                        className={`text-xs px-1.5 py-0.5 rounded border ${systemColors[system] || 'bg-gray-100 text-gray-600 border-gray-200'}`}
+                      >
+                        {system}
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
+              <div className="p-3">
+                {editMode ? (
+                  <textarea
+                    value={levelData.description}
+                    onChange={(e) => updateDescription(level, e.target.value)}
+                    rows={3}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                ) : (
+                  <div className="text-sm text-gray-700">{levelData.description}</div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
