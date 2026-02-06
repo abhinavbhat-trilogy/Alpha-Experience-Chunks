@@ -52,6 +52,19 @@ export default function App() {
     loadData();
   }, [useCloud]);
 
+  // Auto-select first user and first experience on initial load
+  useEffect(() => {
+    if (!data || selectedUser) return;
+    const firstUserId = Object.keys(data)[0];
+    if (firstUserId) {
+      setSelectedUser(firstUserId);
+      const firstStage = data[firstUserId]?.stages?.[0];
+      if (firstStage) {
+        setSelectedStage(firstStage);
+      }
+    }
+  }, [data]);
+
   // Save data when it changes (debounced)
   useEffect(() => {
     if (!data || loading) return;
