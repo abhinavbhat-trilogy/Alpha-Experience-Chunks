@@ -49,7 +49,7 @@ export const initialData = {
       },
       {
         id: "p3",
-        name: "Enrollment",
+        name: "Admissions & Enrollment",
         phase: "Post-Application",
         bucket: "Admissions",
         userIntent: "I want to apply, get accepted, and complete everything needed to enroll my child at Alpha",
