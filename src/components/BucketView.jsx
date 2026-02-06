@@ -7,6 +7,7 @@ const bucketStyles = {
   Admissions: { bg: 'bg-violet-50', border: 'border-violet-200', text: 'text-violet-800', badge: 'bg-violet-100 text-violet-700' },
   Roster: { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-800', badge: 'bg-teal-100 text-teal-700' },
   Academics: { bg: 'bg-sky-50', border: 'border-sky-200', text: 'text-sky-800', badge: 'bg-sky-100 text-sky-700' },
+  'After School': { bg: 'bg-rose-50', border: 'border-rose-200', text: 'text-rose-800', badge: 'bg-rose-100 text-rose-700' },
 };
 
 const levelColors = {
@@ -20,6 +21,7 @@ const systemColors = {
   'Legacy SIS': 'bg-red-100 text-red-700 border-red-200',
   'FinalSite': 'bg-cyan-100 text-cyan-700 border-cyan-200',
   'Unified Student Platform': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'AfterSchool HQ': 'bg-rose-100 text-rose-700 border-rose-200',
 };
 
 function groupByBucket(data) {

@@ -7,6 +7,7 @@ const bucketColors = {
   Admissions: 'bg-violet-100 text-violet-700',
   Roster: 'bg-teal-100 text-teal-700',
   Academics: 'bg-sky-100 text-sky-700',
+  'After School': 'bg-rose-100 text-rose-700',
 };
 
 const levelColors = {
@@ -20,6 +21,7 @@ const systemColors = {
   'Legacy SIS': 'bg-red-100 text-red-700 border-red-200',
   'FinalSite': 'bg-cyan-100 text-cyan-700 border-cyan-200',
   'Unified Student Platform': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  'AfterSchool HQ': 'bg-rose-100 text-rose-700 border-rose-200',
 };
 
 export function ExperienceDetail({

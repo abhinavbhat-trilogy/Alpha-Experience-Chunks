@@ -6,6 +6,7 @@ const bucketColors = {
   Admissions: 'bg-violet-100 text-violet-700',
   Roster: 'bg-teal-100 text-teal-700',
   Academics: 'bg-sky-100 text-sky-700',
+  'After School': 'bg-rose-100 text-rose-700',
 };
 
 export function ExperienceList({

@@ -1,6 +1,6 @@
-export const BUCKETS = ['Marketing', 'Admissions', 'Roster', 'Academics'];
+export const BUCKETS = ['Marketing', 'Admissions', 'Roster', 'Academics', 'After School'];
 export const LEVELS = ['Today', '26/27', 'End State'];
-export const SYSTEMS = ['HubSpot', 'Legacy SIS', 'FinalSite', 'Unified Student Platform'];
+export const SYSTEMS = ['HubSpot', 'Legacy SIS', 'FinalSite', 'Unified Student Platform', 'AfterSchool HQ'];
 
 export const initialData = {
   parents: {
@@ -108,12 +108,12 @@ export const initialData = {
       {
         id: "a0b",
         name: "Student-Facing Events (Camps & Tournaments)",
-        bucket: "Marketing",
+        bucket: "After School",
         userIntent: "I want to run camps, tournaments, and other student-facing events that build brand awareness and attract prospective families",
         evolution: {
-          "Today": { description: "Events set up manually. Separate registration processes. No connection between event attendance and admissions pipeline. Hard to track which event participants later apply.", systems: ["HubSpot"] },
-          "26/27": { description: "-", systems: [] },
-          "End State": { description: "-", systems: [] }
+          "Today": { description: "Events set up manually. Separate registration processes. No connection between event attendance and admissions pipeline. Hard to track which event participants later apply.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       },
@@ -332,6 +332,49 @@ export const initialData = {
           "Today": { description: "Send feedback via email which is then entered into HubSpot, or manually enter feedback into HubSpot directly.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: ["FinalSite"] },
           "End State": { description: "Provide shadow day feedback directly from the guide portal. Feedback instantly available to admissions team.", systems: ["Unified Student Platform"] }
+        },
+        owner: { product: "TBD", tech: "TBD" }
+      }
+    ]
+  },
+  afterSchool: {
+    name: "After School Coordinators",
+    color: "rose",
+    type: "internal",
+    stages: [
+      {
+        id: "as1",
+        name: "Program Management",
+        bucket: "After School",
+        userIntent: "I want to create and manage after school programs, camps, and tournaments efficiently",
+        evolution: {
+          "Today": { description: "Programs set up and managed in AfterSchool HQ. Registration, scheduling, and communication handled within the platform.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
+        },
+        owner: { product: "TBD", tech: "TBD" }
+      },
+      {
+        id: "as2",
+        name: "Student Registration & Attendance",
+        bucket: "After School",
+        userIntent: "I want to track which students are registered for and attending my programs",
+        evolution: {
+          "Today": { description: "Registration and attendance tracked in AfterSchool HQ. No connection to SIS student records.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
+        },
+        owner: { product: "TBD", tech: "TBD" }
+      },
+      {
+        id: "as3",
+        name: "Parent Communication & Billing",
+        bucket: "After School",
+        userIntent: "I want to communicate with parents and handle billing for after school programs",
+        evolution: {
+          "Today": { description: "Communication and billing managed through AfterSchool HQ. Separate from main school billing and communication channels.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       }
