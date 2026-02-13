@@ -465,13 +465,12 @@ export default function App() {
             >
               <Download size={16} /> Export to Markdown
             </button>
-            {/* Reset to Default hidden — version history restore covers this use case */}
-            {false && <button
+            <button
               onClick={resetToDefault}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2 text-sm"
             >
               <RotateCcw size={16} /> Reset to Default
-            </button>}
+            </button>
             {useHistory && (
               <button
                 onClick={handleOpenHistory}
