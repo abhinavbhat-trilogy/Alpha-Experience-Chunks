@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban, History, RefreshCw } from 'lucide-react';
+import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban, History, RefreshCw, Workflow } from 'lucide-react';
 import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
 import { BucketView } from './components/BucketView';
+import { FlowView } from './components/FlowView';
 import { VersionHistory } from './components/VersionHistory';
 import { initialData, BUCKETS, LEVELS } from './data/initialData';
 import { fetchData, saveData, isConfigured, fetchHistory, saveHistory, isHistoryConfigured, subscribeToChanges } from './services/supabase';
@@ -20,7 +21,7 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
   const [lastSaved, setLastSaved] = useState(null);
-  const [viewMode, setViewMode] = useState('users');
+  const [viewMode, setViewMode] = useState('flow');
   const [historyOpen, setHistoryOpen] = useState(false);
   const [versions, setVersions] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
@@ -249,6 +250,10 @@ export default function App() {
       name: "New Experience",
       bucket: BUCKETS[0],
       userIntent: "I want to...",
+      entryPoint: "",
+      exitPoint: "",
+      automationTarget: null,
+      automationNotes: "",
       evolution: Object.fromEntries(
         LEVELS.map(level => [level, { description: "-", systems: [] }])
       )
@@ -273,6 +278,29 @@ export default function App() {
       }
     }, 100);
   };
+
+  // Flow view callbacks (take actorId + stageId explicitly)
+  const flowUpdateStage = useCallback((actorId, stageId, field, value) => {
+    setData(prev => ({
+      ...prev,
+      [actorId]: {
+        ...prev[actorId],
+        stages: prev[actorId].stages.map(stage =>
+          stage.id === stageId ? { ...stage, [field]: value } : stage
+        )
+      }
+    }));
+  }, []);
+
+  const flowDeleteStage = useCallback((actorId, stageId) => {
+    setData(prev => ({
+      ...prev,
+      [actorId]: {
+        ...prev[actorId],
+        stages: prev[actorId].stages.filter(stage => stage.id !== stageId)
+      }
+    }));
+  }, []);
 
   const handleRestore = useCallback(async (snapshot, sourceVersion) => {
     setData(snapshot);
@@ -326,6 +354,17 @@ export default function App() {
           md += `**Bucket**: ${stage.bucket}\n\n`;
         }
         md += `**User Intent**: ${stage.userIntent}\n\n`;
+        if (stage.entryPoint) {
+          md += `**Entry Point**: ${stage.entryPoint}\n\n`;
+        }
+        if (stage.exitPoint) {
+          md += `**Exit Point**: ${stage.exitPoint}\n\n`;
+        }
+        if (stage.automationTarget) {
+          md += `**Automation Vision**: ${stage.automationTarget}`;
+          if (stage.automationNotes) md += ` — ${stage.automationNotes}`;
+          md += '\n\n';
+        }
         if (stage.evolution) {
           LEVELS.forEach(level => {
             const levelData = stage.evolution[level];
@@ -458,6 +497,16 @@ export default function App() {
 
           <div className="flex gap-1 mt-4 bg-gray-100 p-1 rounded-lg w-fit">
             <button
+              onClick={() => setViewMode('flow')}
+              className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 transition-all ${
+                viewMode === 'flow'
+                  ? 'bg-white text-gray-900 shadow-sm font-medium'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Workflow size={14} /> By Flow
+            </button>
+            <button
               onClick={() => setViewMode('users')}
               className={`px-3 py-1.5 text-sm rounded-md flex items-center gap-1.5 transition-all ${
                 viewMode === 'users'
@@ -510,6 +559,12 @@ export default function App() {
               />
             </div>
           </div>
+        ) : viewMode === 'flow' ? (
+          <FlowView
+            data={data}
+            onUpdateStage={flowUpdateStage}
+            onDeleteStage={flowDeleteStage}
+          />
         ) : (
           <BucketView data={data} />
         )}

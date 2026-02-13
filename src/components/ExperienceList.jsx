@@ -4,6 +4,7 @@ import { colorMap } from '../data/initialData';
 const bucketColors = {
   Marketing: 'bg-pink-100 text-pink-700',
   Admissions: 'bg-violet-100 text-violet-700',
+  'Re-enrollment': 'bg-indigo-100 text-indigo-700',
   Roster: 'bg-teal-100 text-teal-700',
   Academics: 'bg-sky-100 text-sky-700',
   'After School': 'bg-rose-100 text-rose-700',
