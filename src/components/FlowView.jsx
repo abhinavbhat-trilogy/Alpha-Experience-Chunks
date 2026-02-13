@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { ChevronRight, X } from 'lucide-react';
 import { ExperienceDetail } from './ExperienceDetail';
-import { colorMap } from '../data/initialData';
+import { colorMap, USER_ORDER } from '../data/initialData';
 
 const bucketColors = {
   Marketing: 'bg-pink-100 text-pink-700',
@@ -35,7 +35,12 @@ export function FlowView({ data, onUpdateStage, onDeleteStage }) {
 
   const actors = useMemo(() => {
     if (!data) return [];
-    return Object.entries(data).map(([id, actor]) => ({ id, ...actor }));
+    const entries = Object.entries(data).map(([id, actor]) => ({ id, ...actor }));
+    return entries.sort((a, b) => {
+      const ai = USER_ORDER.indexOf(a.id);
+      const bi = USER_ORDER.indexOf(b.id);
+      return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+    });
   }, [data]);
 
   // Auto-select first actor
