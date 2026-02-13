@@ -118,6 +118,18 @@ export const initialData = {
         owner: { product: "TBD", tech: "TBD" }
       },
       {
+        id: "a0b",
+        name: "Student-Facing Events (Camps & Tournaments)",
+        bucket: "After School",
+        userIntent: "I want to run camps, tournaments, and other student-facing events that build brand awareness and attract prospective families",
+        evolution: {
+          "Today": { description: "Camps set up in a dedicated system - afterschoolhq.com. Separate registration processes. No connection between event attendance and admissions pipeline. Currently hard to track which event participants later apply, but will be added to the Dashboard in February.", systems: ["AfterSchool HQ"] },
+          "26/27": { description: "-", systems: ["AfterSchool HQ"] },
+          "End State": { description: "-", systems: ["AfterSchool HQ"] }
+        },
+        owner: { product: "TBD", tech: "TBD" }
+      },
+      {
         id: "a1",
         name: "Lead Management & Initial Contact",
         bucket: "Marketing",
@@ -173,7 +185,7 @@ export const initialData = {
         evolution: {
           "Today": { description: "Track funnel in HubSpot + spreadsheets. Manual calculation of conversion rates. No real-time visibility into pipeline health.", systems: ["HubSpot"] },
           "26/27": { description: "-", systems: ["FinalSite"] },
-          "End State": { description: "Real-time admissions dashboard. Funnel metrics (inquiry → application → shadow → offer → enrolled). Conversion rates by source, campus, grade. Automated weekly reports.", systems: ["Unified Student Platform"] }
+          "End State": { description: "Real-time admissions dashboard. Funnel metrics (inquiry \u2192 application \u2192 shadow \u2192 offer \u2192 enrolled). Conversion rates by source, campus, grade. Automated weekly reports.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       }
@@ -227,7 +239,7 @@ export const initialData = {
         userIntent: "I want to manage re-enrollment season efficiently",
         evolution: {
           "Today": { description: "Manual email campaigns to parents. Track completion in spreadsheets. Manual follow-ups for missing forms.", systems: ["FinalSite"] },
-          "26/27": { description: "-", systems: ["FinalSite"] },
+          "26/27": { description: "FinalSite Re-Enrollment. Self-Serve for parents. Still a few manual steps for Registrar (update discounts/financial aid and issue contract).", systems: ["FinalSite"] },
           "End State": { description: "One-click re-enrollment trigger. Forms auto-created in parent portal. Real-time completion dashboard.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
@@ -238,7 +250,7 @@ export const initialData = {
         bucket: "Roster",
         userIntent: "I want to access and manage attendance data without manual spreadsheet work",
         evolution: {
-          "Today": { description: "Receive attendance data from guides via spreadsheets. Consolidate and track in Google Sheets. No centralized view. Manual effort to generate attendance reports.", systems: [] },
+          "Today": { description: "Tracked via 3rd party mobile app: Alora. Receive attendance data from guides via spreadsheets. Consolidate and track in Google Sheets. No centralized view. Manual effort to generate attendance reports.", systems: [] },
           "26/27": { description: "-", systems: ["Unified Student Platform"] },
           "End State": { description: "Real-time attendance dashboard auto-synced from guide mobile app. Attendance visible in student profiles. Easy compliance reporting. Parents see attendance in portal.", systems: ["Unified Student Platform"] }
         },
@@ -250,9 +262,9 @@ export const initialData = {
         bucket: "Roster",
         userIntent: "I want to generate compliance reports and student lists without manual data export",
         evolution: {
-          "Today": { description: "80% of work done in Excel. Manual export from legacy SIS. Build reports by copying data into spreadsheets.", systems: ["Legacy SIS"] },
+          "Today": { description: "80% of work done in GSheets. SIS has a feature to dynamically sync reports to GSheets, but the experience is clunky. Most people don't understand how to run a reports.", systems: ["Legacy SIS"] },
           "26/27": { description: "-", systems: ["Unified Student Platform"] },
-          "End State": { description: "One-click compliance reports (immunizations, attendance, enrollment verification). Custom student lists with filters. Automated Google Sheets sync for recurring reports.", systems: ["Unified Student Platform"] }
+          "End State": { description: "Agent-based reporting. Ask agent in plain English.\nAlso, one-click compliance reports (immunizations, attendance, enrollment verification). Custom student lists with filters. Automated Google Sheets sync for recurring reports.", systems: ["Unified Student Platform"] }
         },
         owner: { product: "TBD", tech: "TBD" }
       }

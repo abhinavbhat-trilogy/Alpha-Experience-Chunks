@@ -1,11 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban, History } from 'lucide-react';
 import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
 import { BucketView } from './components/BucketView';
+import { VersionHistory } from './components/VersionHistory';
 import { initialData, BUCKETS, LEVELS } from './data/initialData';
-import { fetchData, saveData, isConfigured } from './services/jsonbin';
+import { fetchData, saveData, isConfigured, fetchHistory, saveHistory, isHistoryConfigured } from './services/jsonbin';
+import { generateChangeSummary } from './utils/generateChangeSummary';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
 
@@ -18,8 +20,16 @@ export default function App() {
   const [error, setError] = useState(null);
   const [lastSaved, setLastSaved] = useState(null);
   const [viewMode, setViewMode] = useState('users');
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [versions, setVersions] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
+  const versionsRef = useRef([]);
+  const lastSnapshotDataRef = useRef(null);
+  const currentVersionIdRef = useRef(null);
 
   const useCloud = isConfigured();
+  const useHistory = isHistoryConfigured();
 
   // Load data on mount
   useEffect(() => {
@@ -94,6 +104,58 @@ export default function App() {
     return () => clearTimeout(timeoutId);
   }, [data, useCloud, loading]);
 
+  // Load history on mount
+  useEffect(() => {
+    if (!useHistory) return;
+
+    async function loadHistory() {
+      const historyData = await fetchHistory();
+      const loadedVersions = historyData.versions || [];
+      versionsRef.current = loadedVersions;
+      setVersions(loadedVersions);
+      if (loadedVersions.length > 0) {
+        lastSnapshotDataRef.current = loadedVersions[0].snapshot;
+        currentVersionIdRef.current = loadedVersions[0].id;
+      }
+    }
+
+    loadHistory();
+  }, [useHistory]);
+
+  // Set initial baseline for diffing after data loads
+  useEffect(() => {
+    if (data && lastSnapshotDataRef.current === null) {
+      lastSnapshotDataRef.current = data;
+    }
+  }, [data]);
+
+  // Auto-snapshot to history (30 second debounce, separate from save)
+  useEffect(() => {
+    if (!data || loading || !useHistory) return;
+
+    const timeoutId = setTimeout(async () => {
+      const summary = generateChangeSummary(lastSnapshotDataRef.current, data);
+      if (summary === 'No changes detected') return;
+
+      const newVersion = {
+        id: `v_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        summary,
+        snapshot: JSON.parse(JSON.stringify(data)),
+      };
+
+      const updatedVersions = [newVersion, ...versionsRef.current].slice(0, 50);
+      await saveHistory({ versions: updatedVersions });
+
+      versionsRef.current = updatedVersions;
+      setVersions(updatedVersions);
+      currentVersionIdRef.current = newVersion.id;
+      lastSnapshotDataRef.current = data;
+    }, 30000);
+
+    return () => clearTimeout(timeoutId);
+  }, [data, loading, useHistory]);
+
   const handleSelectUser = (userId) => {
     setSelectedUser(userId);
     setSelectedStage(null);
@@ -154,6 +216,40 @@ export default function App() {
       }
     }, 100);
   };
+
+  const handleRestore = useCallback(async (snapshot, sourceVersion) => {
+    setData(snapshot);
+    setSelectedUser(null);
+    setSelectedStage(null);
+
+    const newVersion = {
+      id: `v_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      summary: `Restored to version from ${new Date(sourceVersion.timestamp).toLocaleString()}`,
+      snapshot: JSON.parse(JSON.stringify(snapshot)),
+    };
+
+    const updatedVersions = [newVersion, ...versionsRef.current].slice(0, 50);
+    versionsRef.current = updatedVersions;
+    setVersions(updatedVersions);
+    currentVersionIdRef.current = newVersion.id;
+    lastSnapshotDataRef.current = snapshot;
+
+    await saveHistory({ versions: updatedVersions });
+  }, []);
+
+  const handleOpenHistory = useCallback(async () => {
+    setHistoryOpen(true);
+    setLoadingHistory(true);
+    try {
+      const historyData = await fetchHistory();
+      const loadedVersions = historyData.versions || [];
+      versionsRef.current = loadedVersions;
+      setVersions(loadedVersions);
+    } finally {
+      setLoadingHistory(false);
+    }
+  }, []);
 
   const resetToDefault = async () => {
     if (window.confirm("This will reset all data to the original state. Any changes will be lost. Continue?")) {
@@ -272,10 +368,18 @@ export default function App() {
             </button>
             <button
               onClick={resetToDefault}
-              className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2 text-sm"
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2 text-sm"
             >
               <RotateCcw size={16} /> Reset to Default
             </button>
+            {useHistory && (
+              <button
+                onClick={handleOpenHistory}
+                className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2 text-sm"
+              >
+                <History size={16} /> Version History
+              </button>
+            )}
           </div>
 
           {lastSaved && (
@@ -341,6 +445,15 @@ export default function App() {
           <BucketView data={data} />
         )}
       </div>
+
+      <VersionHistory
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        versions={versions}
+        onRestore={handleRestore}
+        loadingHistory={loadingHistory}
+        currentVersionId={currentVersionIdRef.current}
+      />
     </div>
   );
 }
