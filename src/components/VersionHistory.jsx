@@ -30,15 +30,18 @@ export function VersionHistory({ isOpen, onClose, versions, onRestore, loadingHi
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
 
       <div className="fixed right-0 top-0 h-full w-96 bg-white shadow-xl z-50 flex flex-col">
-        <div className="flex items-center justify-between px-4 py-3 border-b">
-          <div className="flex items-center gap-2">
-            <Clock size={16} />
-            <h2 className="font-semibold text-sm">Version History</h2>
-            <span className="text-xs text-gray-500">({versions.length})</span>
+        <div className="px-4 py-3 border-b">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock size={16} />
+              <h2 className="font-semibold text-sm">Version History</h2>
+              <span className="text-xs text-gray-500">({versions.length})</span>
+            </div>
+            <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
+              <X size={16} />
+            </button>
           </div>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
-            <X size={16} />
-          </button>
+          <p className="text-xs text-gray-400 mt-1">Versions are saved automatically after a few seconds of inactivity</p>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -49,7 +52,7 @@ export function VersionHistory({ isOpen, onClose, versions, onRestore, loadingHi
             </div>
           ) : versions.length === 0 ? (
             <div className="text-center py-8 text-gray-500 text-sm">
-              No versions yet. Versions are saved automatically after 30 seconds of inactivity.
+              No versions yet. Versions are saved automatically after a few seconds of inactivity.
             </div>
           ) : (
             versions.map((version, index) => (
@@ -68,7 +71,7 @@ export function VersionHistory({ isOpen, onClose, versions, onRestore, loadingHi
                       {version.summary}
                     </div>
                   </div>
-                  {version.id !== currentVersionId && (
+                  {version.id !== currentVersionId && version.snapshot && (
                     <button
                       onClick={() => handleRestore(version)}
                       className="ml-2 px-2 py-1 text-xs bg-gray-900 text-white rounded hover:bg-gray-800 flex items-center gap-1 shrink-0"

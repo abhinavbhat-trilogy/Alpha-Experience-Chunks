@@ -10,6 +10,7 @@ import { fetchData, saveData, isConfigured, fetchHistory, saveHistory, isHistory
 import { generateChangeSummary } from './utils/generateChangeSummary';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
+const SNAPSHOT_INTERVAL = 3000; // ms — change to 30000 for production
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -24,9 +25,12 @@ export default function App() {
   const [versions, setVersions] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
+  const [snapshotCountdown, setSnapshotCountdown] = useState(null);
+
   const versionsRef = useRef([]);
   const lastSnapshotDataRef = useRef(null);
   const currentVersionIdRef = useRef(null);
+  const countdownIntervalRef = useRef(null);
 
   const useCloud = isConfigured();
   const useHistory = isHistoryConfigured();
@@ -129,11 +133,24 @@ export default function App() {
     }
   }, [data]);
 
-  // Auto-snapshot to history (30 second debounce, separate from save)
+  // Auto-snapshot to history (debounced)
   useEffect(() => {
     if (!data || loading || !useHistory) return;
 
+    const deadline = Date.now() + SNAPSHOT_INTERVAL;
+
+    // Countdown ticker
+    clearInterval(countdownIntervalRef.current);
+    const tickInterval = setInterval(() => {
+      const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      setSnapshotCountdown(remaining);
+    }, 200);
+    countdownIntervalRef.current = tickInterval;
+
     const timeoutId = setTimeout(async () => {
+      clearInterval(tickInterval);
+      setSnapshotCountdown(null);
+
       const summary = generateChangeSummary(lastSnapshotDataRef.current, data);
       if (summary === 'No changes detected') return;
 
@@ -145,15 +162,22 @@ export default function App() {
       };
 
       const updatedVersions = [newVersion, ...versionsRef.current].slice(0, 50);
-      await saveHistory({ versions: updatedVersions });
 
+      // Update refs/state BEFORE the async save to prevent race conditions
+      // where a concurrent timer callback reads stale values
       versionsRef.current = updatedVersions;
       setVersions(updatedVersions);
       currentVersionIdRef.current = newVersion.id;
       lastSnapshotDataRef.current = data;
-    }, 30000);
 
-    return () => clearTimeout(timeoutId);
+      await saveHistory({ versions: updatedVersions });
+    }, SNAPSHOT_INTERVAL);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(tickInterval);
+      setSnapshotCountdown(null);
+    };
   }, [data, loading, useHistory]);
 
   const handleSelectUser = (userId) => {
@@ -181,6 +205,20 @@ export default function App() {
     }));
 
     setSelectedStage(prev => ({ ...prev, [field]: value }));
+  }, [selectedUser, selectedStage]);
+
+  const deleteStage = useCallback(() => {
+    if (!selectedUser || !selectedStage) return;
+
+    setData(prev => ({
+      ...prev,
+      [selectedUser]: {
+        ...prev[selectedUser],
+        stages: prev[selectedUser].stages.filter(stage => stage.id !== selectedStage.id)
+      }
+    }));
+
+    setSelectedStage(null);
   }, [selectedUser, selectedStage]);
 
   const addStage = () => {
@@ -238,17 +276,8 @@ export default function App() {
     await saveHistory({ versions: updatedVersions });
   }, []);
 
-  const handleOpenHistory = useCallback(async () => {
+  const handleOpenHistory = useCallback(() => {
     setHistoryOpen(true);
-    setLoadingHistory(true);
-    try {
-      const historyData = await fetchHistory();
-      const loadedVersions = historyData.versions || [];
-      versionsRef.current = loadedVersions;
-      setVersions(loadedVersions);
-    } finally {
-      setLoadingHistory(false);
-    }
   }, []);
 
   const resetToDefault = async () => {
@@ -382,11 +411,18 @@ export default function App() {
             )}
           </div>
 
-          {lastSaved && (
-            <p className="text-xs text-gray-500 mt-2">
-              Last saved: {lastSaved.toLocaleTimeString()}
-            </p>
-          )}
+          <div className="flex items-center gap-3 mt-2">
+            {lastSaved && (
+              <p className="text-xs text-gray-500">
+                Last saved: {lastSaved.toLocaleTimeString()}
+              </p>
+            )}
+            {snapshotCountdown !== null && (
+              <span className="text-xs text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full font-medium">
+                Snapshot in {snapshotCountdown}s
+              </span>
+            )}
+          </div>
 
           <div className="flex gap-1 mt-4 bg-gray-100 p-1 rounded-lg w-fit">
             <button
@@ -438,6 +474,7 @@ export default function App() {
               <ExperienceDetail
                 stage={selectedStage}
                 onUpdateStage={updateStage}
+                onDeleteStage={deleteStage}
               />
             </div>
           </div>

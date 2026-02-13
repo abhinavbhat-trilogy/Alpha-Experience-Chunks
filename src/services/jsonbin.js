@@ -14,6 +14,7 @@ export async function fetchData() {
       headers: {
         'X-Master-Key': API_KEY,
       },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -69,6 +70,7 @@ export async function fetchHistory() {
   try {
     const response = await fetch(`${JSONBIN_API_URL}/${HISTORY_BIN_ID}/latest`, {
       headers: { 'X-Master-Key': API_KEY },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -83,8 +85,29 @@ export async function fetchHistory() {
   }
 }
 
+const MAX_HISTORY_BYTES = 90000; // Stay under JSONBin free tier 100KB limit
+
+function trimHistoryToFit(historyData) {
+  let payload = JSON.stringify(historyData);
+  if (payload.length <= MAX_HISTORY_BYTES) return historyData;
+
+  // Strip snapshots from oldest versions first, keeping newest ones restorable
+  const versions = [...historyData.versions];
+  for (let i = versions.length - 1; i >= 0; i--) {
+    if (payload.length <= MAX_HISTORY_BYTES) break;
+    if (versions[i].snapshot) {
+      versions[i] = { ...versions[i], snapshot: null };
+      payload = JSON.stringify({ versions });
+    }
+  }
+
+  return { versions };
+}
+
 export async function saveHistory(historyData) {
   if (!API_KEY || !HISTORY_BIN_ID) return null;
+
+  const trimmed = trimHistoryToFit(historyData);
 
   try {
     const response = await fetch(`${JSONBIN_API_URL}/${HISTORY_BIN_ID}`, {
@@ -93,10 +116,12 @@ export async function saveHistory(historyData) {
         'Content-Type': 'application/json',
         'X-Master-Key': API_KEY,
       },
-      body: JSON.stringify(historyData),
+      body: JSON.stringify(trimmed),
     });
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.error('[JSONBin] saveHistory failed:', response.status, errorBody);
       throw new Error(`Failed to save history: ${response.status}`);
     }
 

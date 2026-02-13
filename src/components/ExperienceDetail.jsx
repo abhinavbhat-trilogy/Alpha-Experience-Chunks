@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Edit2 } from 'lucide-react';
+import { Edit2, Trash2 } from 'lucide-react';
 import { BUCKETS, LEVELS, SYSTEMS } from '../data/initialData';
 
 const bucketColors = {
@@ -26,7 +26,8 @@ const systemColors = {
 
 export function ExperienceDetail({
   stage,
-  onUpdateStage
+  onUpdateStage,
+  onDeleteStage
 }) {
   const [editMode, setEditMode] = useState(false);
 
@@ -65,12 +66,25 @@ export function ExperienceDetail({
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-gray-700">Experience Details</h2>
-        <button
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (window.confirm(`Delete "${stage.name}"? This cannot be undone.`)) {
+                onDeleteStage();
+                setEditMode(false);
+              }
+            }}
+            className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
+          >
+            <Trash2 size={12} /> Delete
+          </button>
+          <button
             onClick={() => setEditMode(!editMode)}
             className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1"
           >
             <Edit2 size={12} /> {editMode ? 'Done' : 'Edit'}
           </button>
+        </div>
       </div>
 
       <div className="space-y-4">
