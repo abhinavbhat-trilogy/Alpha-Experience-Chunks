@@ -1,7 +1,11 @@
-import { colorMap } from '../data/initialData';
+import { colorMap, USER_ORDER } from '../data/initialData';
 
 export function UserList({ data, selectedUser, onSelectUser }) {
-  const users = Object.keys(data);
+  const users = Object.keys(data).sort((a, b) => {
+    const ai = USER_ORDER.indexOf(a);
+    const bi = USER_ORDER.indexOf(b);
+    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+  });
   const internalUsers = users.filter(userId => data[userId].type === 'internal');
   const externalSystems = users.filter(userId => data[userId].type === 'external');
 

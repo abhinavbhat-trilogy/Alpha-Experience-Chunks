@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban, History } from 'lucide-react';
+import { Download, RotateCcw, Cloud, CloudOff, Loader2, Users, FolderKanban, History, RefreshCw } from 'lucide-react';
 import { UserList } from './components/UserList';
 import { ExperienceList } from './components/ExperienceList';
 import { ExperienceDetail } from './components/ExperienceDetail';
 import { BucketView } from './components/BucketView';
 import { VersionHistory } from './components/VersionHistory';
 import { initialData, BUCKETS, LEVELS } from './data/initialData';
-import { fetchData, saveData, isConfigured, fetchHistory, saveHistory, isHistoryConfigured } from './services/jsonbin';
+import { fetchData, saveData, isConfigured, fetchHistory, saveHistory, isHistoryConfigured, subscribeToChanges } from './services/supabase';
 import { generateChangeSummary } from './utils/generateChangeSummary';
 
 const STORAGE_KEY = 'alpha-experience-chunks-data';
-const SNAPSHOT_INTERVAL = 3000; // ms — change to 30000 for production
+const SNAPSHOT_INTERVAL = 15000; // ms — 15 seconds between version snapshots
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -26,6 +26,7 @@ export default function App() {
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   const [snapshotCountdown, setSnapshotCountdown] = useState(null);
+  const [remoteUpdateAvailable, setRemoteUpdateAvailable] = useState(false);
 
   const versionsRef = useRef([]);
   const lastSnapshotDataRef = useRef(null);
@@ -64,6 +65,21 @@ export default function App() {
     }
 
     loadData();
+  }, [useCloud]);
+
+  // Real-time sync: listen for changes from other browsers
+  useEffect(() => {
+    if (!useCloud) return;
+
+    const unsubscribe = subscribeToChanges((newData) => {
+      setData(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
+        setRemoteUpdateAvailable(true);
+        return prev;
+      });
+    });
+
+    return unsubscribe;
   }, [useCloud]);
 
   // Auto-select first user and first experience on initial load
@@ -114,7 +130,10 @@ export default function App() {
 
     async function loadHistory() {
       const historyData = await fetchHistory();
-      const loadedVersions = historyData.versions || [];
+      const loadedVersions = (historyData.versions || []).map(v => ({
+        ...v,
+        timestamp: v.timestamp || v.created_at,
+      }));
       versionsRef.current = loadedVersions;
       setVersions(loadedVersions);
       if (loadedVersions.length > 0) {
@@ -388,6 +407,18 @@ export default function App() {
             </div>
           )}
 
+          {remoteUpdateAvailable && (
+            <div className="mt-2 text-sm text-blue-700 bg-blue-50 px-3 py-1.5 rounded flex items-center justify-between">
+              <span>Data was updated by another user.</span>
+              <button
+                onClick={() => window.location.reload()}
+                className="ml-3 px-2 py-0.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 flex items-center gap-1"
+              >
+                <RefreshCw size={12} /> Refresh
+              </button>
+            </div>
+          )}
+
           <div className="flex gap-2 mt-3">
             <button
               onClick={exportData}
@@ -395,12 +426,13 @@ export default function App() {
             >
               <Download size={16} /> Export to Markdown
             </button>
-            <button
+            {/* Reset to Default hidden — version history restore covers this use case */}
+            {false && <button
               onClick={resetToDefault}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2 text-sm"
             >
               <RotateCcw size={16} /> Reset to Default
-            </button>
+            </button>}
             {useHistory && (
               <button
                 onClick={handleOpenHistory}

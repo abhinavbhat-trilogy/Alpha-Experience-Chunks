@@ -1,6 +1,7 @@
 export const BUCKETS = ['Marketing', 'Admissions', 'Roster', 'Academics', 'After School'];
 export const LEVELS = ['Today', '26/27', 'End State'];
 export const SYSTEMS = ['HubSpot', 'Legacy SIS', 'FinalSite', 'Unified Student Platform', 'AfterSchool HQ'];
+export const USER_ORDER = ['parents', 'admissions', 'registrars', 'guides', 'finance', 'afterSchool', 'learningPlatforms'];
 
 export const initialData = {
   parents: {
